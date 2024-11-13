@@ -24,7 +24,8 @@ class UserController extends Controller
 
             // Validate if password and c_password match
             if (!empty($password) && !empty($c_password) && $password !== $c_password) {
-                return redirect()->back()->with('error', 'Passwords and Confirm Password do not match.');
+                return redirect()->back()->with('error', 'Passwords and Confirm Password do not match.')
+                                         ->withInput(); // Keep the input values
             }
 
             $client = new Client();
@@ -171,18 +172,11 @@ class UserController extends Controller
     public function showUser()
     {
         try {
-            $token = Session::get('token');
+               $token = Session::get('token');
 
-            // panggil controller CompanyController
-            $companyController = new CompanyController();
-            $companyCheckData = $companyController->companyCheck();
-
-            if($companyCheckData->json('success') == false) {
-                return redirect()->route('company-not-found')->with('error', $companyCheckData->json('message'));
-            } else {
-                $response = Http::withHeaders([
+               $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $token,
-                ])->get(env('API_URL') . '/api/v1/user/get');
+                ])->get(env('API_URL') . '/api/v1/user/getUserAll');
 
                 if ($response->successful() && $response->json('success')) {
                     $data = $response->json('data');
@@ -191,7 +185,9 @@ class UserController extends Controller
                     // dd($user);
                     return view("pages.user.index", compact("user"));
                 }
-            }
+                else {
+                 return redirect()->back()->with('error', $th->getMessage());
+                }
 
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             // Get the response and decode JSON
@@ -239,33 +235,30 @@ class UserController extends Controller
     {
         try {
             $token = Session::get('token');
+
             if (!$token) {
                 return redirect()->back()->with('error', 'Token tidak ditemukan.');
             }
 
-            // panggil controller CompanyController
-            $companyController = new CompanyController();
-            $companyCheckData = $companyController->companyCheck();
+             $responseCompany = Http::withHeaders([
+                   'Authorization' => 'Bearer ' . $token,
+               ])->post(env('API_URL') . '/api/admin/company/get');
 
-            if($companyCheckData->json('success') == false) {
-                return redirect()->route('company-not-found')->with('error', $companyCheckData->json('message'));
-            }
-            else {
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $token,
-                ])->post(env('API_URL') . '/api/v1/roles/get');
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+            ])->post(env('API_URL') . '/api/v1/roles/get');
+                //dd($response);
+            if ($response->successful() && $response->json('success') && $responseCompany->successful() && $responseCompany->json('success')) {
+                $data = $response->json('data');
+                $f_role = json_decode(json_encode($data)); // Mengonversi array menjadi objek jika dibutuhin
 
-                if ($response->successful() && $response->json('success')) {
-                    $data = $response->json('data');
-                    $f_role = json_decode(json_encode($data)); // Mengonversi array menjadi objek jika dibutuhin
+               $dataCompany = $responseCompany->json('data');
+               $company = json_decode(json_encode($dataCompany));
 
-                    $dataCompany  = $companyCheckData->json('data');
-                    $company      = json_decode(json_encode($dataCompany)); // Mengonversi array menjadi objek jika dibutuhin
 
-                    return view("pages.user.add.index", compact("f_role", "company"));
-                } else {
-                    return redirect()->back()->with('error', $response->json('message'));
-                }
+                return view("pages.user.add.index", compact("f_role","company"));
+            } else {
+                return redirect()->back()->with('error', $response->json('message'));
             }
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             // Get the response and decode JSON
@@ -286,32 +279,34 @@ class UserController extends Controller
         try {
             $token = Session::get('token');
 
-              // panggil controller CompanyController
-              $companyController = new CompanyController();
-              $companyCheckData = $companyController->companyCheck();
+//               // panggil controller CompanyController
+//               $companyController = new CompanyController();
+//               $companyCheckData = $companyController->companyCheck();
+//
+//               if($companyCheckData->json('success') == false) {
+//                   return redirect()->route('company-not-found')->with('error', $companyCheckData->json('message'));
+//               }
+//               else {
+//
+//               }
 
-              if($companyCheckData->json('success') == false) {
-                  return redirect()->route('company-not-found')->with('error', $companyCheckData->json('message'));
-              }
-              else {
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $token,
-                ])->post(env('API_URL') . '/api/v1/user/view', [
-                    'id' => $id,
-                ]);
+             $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+            ])->post(env('API_URL') . '/api/v1/user/view', [
+                'id' => $id,
+            ]);
 
-                if ($response->successful() && $response->json('success')) {
-                    $data = $response->json('data');
-                    $data = json_decode($response);
-                    $d_user = $data->data;
+            if ($response->successful() && $response->json('success')) {
+                $data = $response->json('data');
+                $data = json_decode($response);
+                $d_user = $data->data;
 
-                    return view("pages.user.detail.index", compact("d_user"));
-                } else {
-                    $data = $response->json('message');
+                return view("pages.user.detail.index", compact("d_user"));
+            } else {
+                $data = $response->json('message');
 
-                    return view("pages.user.detail.index", compact("data"));
-                }
-              }
+                return view("pages.user.detail.index", compact("data"));
+            }
 
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             // Get the response and decode JSON
@@ -339,41 +334,35 @@ class UserController extends Controller
             }
 
 
+             $responseCompany = Http::withHeaders([
+                 'Authorization' => 'Bearer ' . $token,
+             ])->post(env('API_URL') . '/api/admin/company/get');
 
-              // panggil controller CompanyController
-              $companyController = new CompanyController();
-              $companyCheckData = $companyController->companyCheck();
+              $response_user_detail = Http::withHeaders([
+                  'Authorization' => 'Bearer ' . $token,
+              ])->post(env('API_URL') . '/api/v1/user/view', [
+                  'id' => $id,
+              ]);
 
-              if($companyCheckData->json('success') == false) {
-                  return redirect()->route('company-not-found')->with('error', $companyCheckData->json('message'));
-              }
-              else {
-                $response_user_detail = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $token,
-                ])->post(env('API_URL') . '/api/v1/user/view', [
-                    'id' => $id,
-                ]);
+              $response_role = Http::withHeaders([
+                  'Authorization' => 'Bearer ' . $token,
+              ])->post(env('API_URL') . '/api/v1/roles/get');
 
-                $response_role = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $token,
-                ])->post(env('API_URL') . '/api/v1/roles/get');
+              if ($response_role->successful() && $response_role->json('success') && $response_user_detail->successful() && $response_user_detail->json('success') && $responseCompany->successful() && $responseCompany->json('success')) {
+                  $data_role = $response_role->json('data');
+                  $f_role = json_decode(json_encode($data_role));
 
-                if ($response_role->successful() && $response_role->json('success') && $response_user_detail->successful() && $response_user_detail->json('success')) {
-                    $data_role = $response_role->json('data');
-                    $f_role = json_decode(json_encode($data_role));
-
-                    $data_user_detail = $response_user_detail->json('data');
-                    $f_user_detail = json_decode(json_encode($data_user_detail));
+                  $data_user_detail = $response_user_detail->json('data');
+                  $f_user_detail = json_decode(json_encode($data_user_detail));
 
 
-                    $dataCompany  = $companyCheckData->json('data');
-                    $company      = json_decode(json_encode($dataCompany));
+                  $dataCompany  = $responseCompany->json('data');
+                  $company      = json_decode(json_encode($dataCompany));
 
-                    return view("pages.user.edit.index", compact("f_role", "f_user_detail", "company"));
-                } else {
-                    return redirect()->back()->with('error', $response_role->json('message'));
+                  return view("pages.user.edit.index", compact("f_role", "f_user_detail", "company"));
+              } else {
+                  return redirect()->back()->with('error', $response_role->json('message'));
                 }
-              }
 
 
 

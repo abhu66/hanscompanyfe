@@ -20,12 +20,12 @@ Route::middleware(['isLoginValid'])->group(function () {
     Route::get('/profile/{id}', [UserController::class, 'profile'])->name('profile');
 
     Route::get("/", [UserController::class, 'index'])->name('index');
-//     Route::get("/user", [UserController::class, "showUser"])->name('user');
-//     Route::get("/user/create", [UserController::class, "create"])->name('user.create');
-//     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
-//     Route::get('/user/view/{id}', [UserController::class, 'showDetailUser'])->name('user.detail');
-//     Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-//     Route::post('/user/update', [UserController::class, 'update'])->name('user.update');
+    Route::get("/user", [UserController::class, "showUser"])->name('user');
+    Route::get("/user/create", [UserController::class, "create"])->name('user.create');
+    Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
+    Route::get('/user/view/{id}', [UserController::class, 'showDetailUser'])->name('user.detail');
+    Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('/user/update', [UserController::class, 'update'])->name('user.update');
 //
 //     Route::get('/role', [RoleController::class, 'showRole'])->name('role');
 //     Route::get("/role/create", [RoleController::class, "create"])->name('role.create');

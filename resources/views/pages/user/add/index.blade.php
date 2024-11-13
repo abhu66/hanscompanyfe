@@ -30,12 +30,11 @@
                         @csrf
                         <div class="row g-3">
 
-                            <input type="text" name="company_id" hidden value="{{ $company->id }}">
 
                             <div class="col-lg-6">
                                 <div>
                                     <label class="form-label" for="name">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name"
+                                    <input type="text" class="form-control" id="name" name="name"  value="{{ old('name') }}"
                                         placeholder="Enter your name" required />
                                 </div>
                             </div>
@@ -43,7 +42,7 @@
                             <div class="col-lg-6">
                                 <div>
                                     <label class="form-label" for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email"
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
                                         placeholder="Enter your email" required />
                                 </div>
                             </div>
@@ -52,7 +51,7 @@
                                 <div>
                                     <label class="form-label" for="password">Password</label>
                                     <div class="input-group">
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required />
+                                        <input type="password" class="form-control" id="password" value="{{ old('password') }}" name="password" placeholder="Enter your password" required />
                                         <span class="input-group-text" onclick="togglePassword('password', this)">
                                             <i class="fa fa-eye"></i>
                                         </span>
@@ -64,7 +63,7 @@
                                 <div>
                                     <label class="form-label" for="c_password">Confirm Password</label>
                                     <div class="input-group">
-                                        <input type="password" class="form-control" id="c_password" name="c_password" placeholder="Confirm your password" required />
+                                        <input type="password" class="form-control" id="c_password" value="{{ old('c_password') }}" name="c_password" placeholder="Confirm your password" required />
                                         <span class="input-group-text" onclick="togglePassword('c_password', this)">
                                             <i class="fa fa-eye"></i>
                                         </span>
@@ -74,11 +73,26 @@
 
                             <div class="col-lg-6">
                                 <div>
+                                    <label class="form-label" for="company_id">Company</label>
+                                    <select name="company_id" id="company_id" class="form-control" required>
+                                        <option value="">Select Company</option>
+                                        @foreach ($company as $c)
+                                            <option value="{{ $c->id }}" {{ old('company_id') == $c->id ? 'selected' : '' }}>
+                                                {{ $c->company_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                         <div class="col-lg-6">
+                                <div>
                                     <label class="form-label" for="role">Role</label>
                                     <select name="role_id" id="role_id" class="form-control" required>
                                         <option value="">Select a Role</option>
                                         @foreach ($f_role as $role)
-                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                            <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                            {{ $role->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

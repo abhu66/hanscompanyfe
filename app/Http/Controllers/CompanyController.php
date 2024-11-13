@@ -42,21 +42,24 @@ class CompanyController extends Controller
         {
             try {
                // panggil controller CompanyController
-               $companyController = new CompanyController();
-               $companyCheckData = $companyController->companyCheck();
-
-               $data_company = $companyCheckData->json('data');
-
-
-               Session::put('logo_url', $data_company['logo_url']);
+//                $companyController = new CompanyController();
+//                $companyCheckData = $companyController->companyCheck();
+//
+//                $data_company = $companyCheckData->json('data');
+//
+//
+//
+//                Session::put('logo_url', $data_company['logo_url']);
 
                $token = Session::get('token');
+
+
 
 
                $response = Http::withHeaders([
                    'Authorization' => 'Bearer ' . $token,
                ])->post(env('API_URL') . '/api/admin/company/get');
-//                   dd($response);
+                   // dd($response);
                if ($response->successful() && $response->json('success')) {
                    $data = $response->json('data');
                    $data = json_decode($response);

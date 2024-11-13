@@ -29,8 +29,8 @@
                     <form method="POST" action="{{ route('user.update') }}">
                         @csrf
                         <div class="row g-3">
-                            <input type="text" name="company_id" hidden value="{{ $company->id }}">
-                            
+                            <input type="text" name="company_id" hidden value="{{ $f_user_detail->company->id }}">
+
                             <input type="text" class="form-control" id="id" name="id" hidden
                                 value="{{ $f_user_detail->id }}" required />
                             <div class="col-lg-6">
@@ -109,7 +109,23 @@
                                         placeholder="Enter updated by" value="{{ $f_user_detail->updated_by }}" required />
                                 </div>
                             </div>
+                                <div class="col-lg-6">
+                                <div>
+                                    <label class="form-label" for="company_id">Company</label>
+                                    <select name="company_id" id="company_id" class="form-control" required>
+                                        <option value="">Select Company</option>
+                                        @foreach ($company as $c)
+                                            <option value="{{ $c->id }}"
+                                                {{ old('company_id') == $c->id ? 'selected' : '' }}
+                                                {{ isset($f_user_detail) && $f_user_detail->company->id == $c->id ? 'selected' : '' }}>
 
+
+                                                {{ $c->company_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-lg-6">
                                 <div>
                                     <label class="form-label" for="role">Role</label>

@@ -5,8 +5,8 @@
 <!-- ========== App Menu ========== -->
 <div class="app-menu navbar-menu">
     <!-- LOGO -->
-    <div class="navbar-brand-box">
-        <!-- Dark Logo-->
+    <!--<div class="navbar-brand-box">
+
         <a href="index.html" class="logo logo-dark">
             <span class="logo-sm">
                 <img src="{{ env('API_URL') . '/api/images/logo/' . Session::get('logo_url') }}" alt="" height="100">
@@ -15,7 +15,7 @@
                 <img src="{{ env('API_URL') . '/api/images/logo/' . Session::get('logo_url') }}" alt="" height="100">
             </span>
         </a>
-        <!-- Light Logo-->
+
         <a href="index.html" class="logo logo-light">
             <span class="logo-sm">
                 <img src="{{ env('API_URL') . '/api/images/logo/' . Session::get('logo_url') }}" alt="" height="100">
@@ -29,6 +29,7 @@
             <i class="ri-record-circle-line"></i>
         </button>
     </div>
+    -- >
 
 
     <!--
@@ -55,7 +56,14 @@
         <div class="container-fluid">
             <div id="two-column-menu"></div>
             <ul class="navbar-nav" id="navbar-nav">
+
+
                 <li class="menu-title"><span data-key="t-menu">Menu</span></li>
+                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('user') }}">
+                        <i class="ri-user-line"></i> <span data-key="t-dashboards">User</span>
+                    </a>
+                 </li>
                  <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('company') }}">
                         <i class="ri-building-line"></i> <span data-key="t-dashboards">Company</span>

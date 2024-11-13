@@ -16,7 +16,8 @@ class AuthController extends Controller
         $companyCheckData = $companyController->companyCheck();
 
         if($companyCheckData->json('success') == false) {
-           return view("auth.login");
+           $f_company = null;
+           return view("auth.login",compact("f_company"));
             //return redirect()->route('company-not-found')->with('error', $companyCheckData->json('message'));
         } else {
              $data_company = $companyCheckData->json('data');

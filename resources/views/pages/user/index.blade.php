@@ -2,7 +2,6 @@
 @section('title', 'List Users Page')
 @section('content')
     @php
-        use App\Services\MenuService;
         // dd(Session::get('user'));
     @endphp
     <div class="row">
@@ -11,14 +10,12 @@
                 <div class="card-header align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Table Users</h4>
                     <div class="flex-shrink-0">
-                        @if (MenuService::hasAccess(Session::get('role_functions'), 'CRUD User'))
-                            <a href="{{ route('user.create') }}" class="btn btn-primary" id="addUserButton">
-                                <i class="ri-add-line align-middle"></i> Add User
-                            </a>
-                        @endif
+                          <a href="{{ route('user.create') }}" class="btn btn-primary" id="addUserButton">
+                                                        <i class="ri-add-line align-middle"></i> Add User
+                                                    </a>
                     </div>
                 </div><!-- end card header -->
-                @if (MenuService::hasAccess(Session::get('role_functions'), 'View User'))
+
                     <div class="card-body">
                         <div class="live-preview">
                             <div class="table-responsive">
@@ -56,11 +53,8 @@
                                                 <td>
                                                     <a href="{{ route('user.detail', $data->id) }}"
                                                         class="link-primary">View</a>
-                                                    @if (MenuService::hasAccess(Session::get('role_functions'), 'CRUD User'))
-                                                        <a href="{{ route('user.edit', $data->id) }}"
-                                                            class="link-success">| Edit</a>
-                                                    @endif
-
+                                                     <a href="{{ route('user.edit', $data->id) }}"
+                                                      class="link-success">| Edit</a>
                                                 </td>
 
                                             </tr>
@@ -72,7 +66,7 @@
                         </div>
 
                     </div>
-                @endif
+
                 <!-- end card-body -->
             </div><!-- end card -->
         </div>
