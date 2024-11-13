@@ -19,18 +19,18 @@
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
 
-     <!-- Inline CSS for background -->
-     @php
-         $backgroundImageUrl = isset($f_company) && !empty($f_company->background_image_url) ? env('API_URL') . '/api/images/bg/' . $f_company->background_image_url : 'default-image-url.jpg';
-     @endphp
-    <style>
+ <!-- Inline CSS for background
+      @php
+          $backgroundImageUrl = isset($f_company) && !empty($f_company->background_image_url) ? env('API_URL') . '/api/images/bg/' . $f_company->background_image_url : 'default-image-url.jpg';
+      @endphp -->
+    <!--<style>
 
-        .auth-page-wrapper {
-         background-image: url('{{ $backgroundImageUrl }}'); background-size: cover;
-            background-position: center;
-            height: 100vh;
-        }
-    </style>
+                 .auth-page-wrapper {
+                  background-image: url('{{ $backgroundImageUrl }}'); background-size: cover;
+                     background-position: center;
+                     height: 100vh;
+                 }
+             </style> -->
 </head>
 
 <body>
